@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { StyleSheet, View, Text, Image } from 'react-native'
+import {getImageFromAPI} from "../API/TMDBApi";
 
 class FilmItem extends React.Component {
     render() {
@@ -10,7 +11,7 @@ class FilmItem extends React.Component {
             <View style={styles.main_container}>
                 <Image
                     style={styles.image}
-                    source={{uri: film.poster_path}}
+                    source={{uri: getImageFromAPI(film.poster_path)}}
                 />
                 <View style={styles.content_container}>
                     <View style={styles.header_container}>
@@ -31,11 +32,11 @@ class FilmItem extends React.Component {
 
 const styles = StyleSheet.create({
     main_container: {
-        height: 190,
+        height: 200,
         flexDirection: 'row'
     },
     image: {
-        width: 120,
+        width: 119,
         height: 180,
         margin: 5,
         backgroundColor: 'gray'
