@@ -23,11 +23,6 @@ class FilmDetail extends React.Component {
         })
     }
 
-    componentDidUpdate() {
-        console.log("componentDidUpdate : ")
-        console.log(this.props.favoritesFilm)
-    }
-
     _displayLoading() {
         if (this.state.isLoading) {
             return (
