@@ -9,6 +9,8 @@
   "dependencies": {
     "@types/react": "^16.8.23",
     "expo": "^32.0.0",
+    "moment": "^2.24.0",
+    "numeral": "^2.0.6",
     "react": "16.5.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
     "react-navigation": "^3.11.1"

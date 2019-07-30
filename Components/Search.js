@@ -19,7 +19,6 @@ class Search extends React.Component {
     }
 
     _displayDetailForFilm = (idFilm) => {
-        console.log("display film with id :" + idFilm);
         this.props.navigation.navigate("FilmDetail", {idFilm: idFilm})
     }
 
@@ -62,7 +61,6 @@ class Search extends React.Component {
     }
 
     render() {
-        console.log(this.props)
         return (
             <View style={styles.main_container}>
                 <TextInput
