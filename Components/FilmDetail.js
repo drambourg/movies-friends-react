@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleSheet, View, Text, ActivityIndicator, ScrollView, Image, TouchableOpacity} from "react-native";
+import {StyleSheet, View, Text, ActivityIndicator, ScrollView, Image, TouchableOpacity, Button} from "react-native";
 import {getFilmDetailFromApi, getImageFromAPI} from '../API/TMDBApi'
 import moment from 'moment'
 import numeral from 'numeral'
@@ -23,6 +23,11 @@ class FilmDetail extends React.Component {
         })
     }
 
+    componentDidUpdate() {
+        console.log("componentDidUpdate : ")
+        console.log(this.props.favoritesFilm)
+    }
+
     _displayLoading() {
         if (this.state.isLoading) {
             return (
@@ -31,6 +36,25 @@ class FilmDetail extends React.Component {
                 </View>
             )
         }
+    }
+
+    _toggleFavorite() {
+        const action = { type: "TOGGLE_FAVORITE", value: this.state.film }
+        this.props.dispatch(action)
+    }
+
+    _displayFavoriteImage() {
+        var sourceImage = require('../Images/ic_favorite_border.png')
+        if (this.props.favoritesFilm.findIndex(item => item.id === this.state.film.id) !== -1) {
+            // Film dans nos favoris
+            sourceImage = require('../Images/ic_favorite.png')
+        }
+        return (
+            <Image
+                style={styles.favorite_image}
+                source={sourceImage}
+            />
+        )
     }
 
     _displayFilm() {
@@ -45,6 +69,11 @@ class FilmDetail extends React.Component {
                     <View style={styles.content_container}>
                         <View style={styles.header_container}>
                             <Text style={styles.movie_title}>{film.title}</Text>
+                            <TouchableOpacity
+                            style={styles.favorite_container}
+                            onPress={() => this._toggleFavorite()}>
+                                {this._displayFavoriteImage()}
+                            </TouchableOpacity>
                         </View>
                         <View style={styles.description_container}>
                             <Text style={styles.description_text}>{film.overview}</Text>
@@ -131,7 +160,13 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 15,
     },
-
+    favorite_container: {
+        alignItems: 'center',
+    },
+    favorite_image: {
+        width: 40,
+        height: 40
+    },
 })
 
 
