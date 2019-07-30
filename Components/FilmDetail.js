@@ -3,6 +3,7 @@ import {StyleSheet, View, Text, ActivityIndicator, ScrollView, Image, TouchableO
 import {getFilmDetailFromApi, getImageFromAPI} from '../API/TMDBApi'
 import moment from 'moment'
 import numeral from 'numeral'
+import {connect} from 'react-redux'
 
 class FilmDetail extends React.Component {
     constructor(props) {
@@ -33,7 +34,7 @@ class FilmDetail extends React.Component {
     }
 
     _displayFilm() {
-        const { film } = this.state
+        const {film} = this.state
         if (this.state.film != undefined) {
             return (
                 <ScrollView style={styles.scrollview_container}>
@@ -49,17 +50,20 @@ class FilmDetail extends React.Component {
                             <Text style={styles.description_text}>{film.overview}</Text>
                         </View>
                         <View style={styles.characteristics_container}>
-                            <Text style={styles.characteristics_text}>Sorti le {moment(new Date(film.release_date)).format('DD/MM/YYYY')}</Text>
+                            <Text style={styles.characteristics_text}>Sorti
+                                le {moment(new Date(film.release_date)).format('DD/MM/YYYY')}</Text>
                             <Text style={styles.characteristics_text}>Note : {film.vote_average} / 10</Text>
                             <Text style={styles.characteristics_text}>Nombre de votes : {film.vote_count}</Text>
-                            <Text style={styles.characteristics_text}>Budget : {numeral(film.budget).format('0,0[.]00 $')}</Text>
-                            <Text style={styles.characteristics_text}>Genre(s) : {film.genres.map(function(genre){
+                            <Text style={styles.characteristics_text}>Budget
+                                : {numeral(film.budget).format('0,0[.]00 $')}</Text>
+                            <Text style={styles.characteristics_text}>Genre(s) : {film.genres.map(function (genre) {
                                 return genre.name;
                             }).join(" / ")}
                             </Text>
-                            <Text style={styles.characteristics_text}>Companie(s) : {film.production_companies.map(function(company){
-                                return company.name;
-                            }).join(" / ")}
+                            <Text style={styles.characteristics_text}>Companie(s)
+                                : {film.production_companies.map(function (company) {
+                                    return company.name;
+                                }).join(" / ")}
                             </Text>
                         </View>
                     </View>
@@ -120,7 +124,7 @@ const styles = StyleSheet.create({
         color: '#666666'
     },
     characteristics_container: {
-        marginVertical : 5,
+        marginVertical: 5,
         flex: 1
     },
     characteristics_text: {
@@ -130,4 +134,11 @@ const styles = StyleSheet.create({
 
 })
 
-export default FilmDetail
+
+const mapStateToProps = (state) => {
+    return {
+        favoritesFilm : state.favoritesFilm
+    }
+}
+
+export default connect(mapStateToProps)(FilmDetail)
