@@ -16,6 +16,7 @@ class Search extends React.Component {
             films: [],
             isLoading: false
         }
+        this._loadFilms = this._loadFilms.bind(this)
     }
 
     _loadFilms() {
