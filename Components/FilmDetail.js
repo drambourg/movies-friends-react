@@ -1,17 +1,55 @@
 import React from 'react'
-import {StyleSheet, View, Text, ActivityIndicator, ScrollView, Image, TouchableOpacity, Share, Platform} from "react-native";
+import {
+    StyleSheet,
+    View,
+    Text,
+    ActivityIndicator,
+    ScrollView,
+    Image,
+    TouchableOpacity,
+    Share,
+    Platform
+} from "react-native";
 import {getFilmDetailFromApi, getImageFromAPI} from '../API/TMDBApi'
 import moment from 'moment'
 import numeral from 'numeral'
 import {connect} from 'react-redux'
 
 class FilmDetail extends React.Component {
+    static navigationOptions = ({navigation}) => {
+        const {params} = navigation.state
+        // On accède à la fonction shareFilm et au film via les paramètres qu'on a ajouté à la navigation
+        if (params.film != undefined && Platform.OS === 'ios') {
+            return {
+                // On a besoin d'afficher une image, il faut donc passe par une Touchable une fois de plus
+                headerRight: <TouchableOpacity
+                    style={styles.share_touchable_headerrightbutton}
+                    onPress={() => params.shareFilm()}>
+                    <Image
+                        style={styles.share_image}
+                        source={require('../Images/ic_share.png')}/>
+                </TouchableOpacity>
+            }
+        }
+    }
+
     constructor(props) {
         super(props)
         this.state = {
             film: undefined,
             isLoading: true
         }
+        //...
+        // Ne pas oublier de binder la fonction _shareFilm sinon, lorsqu'on va l'appeler depuis le headerRight de la navigation, this.state.film sera undefined et fera planter l'application
+        this._shareFilm = this._shareFilm.bind(this)
+    }
+
+    // Fonction pour faire passer la fonction _shareFilm et le film aux paramètres de la navigation. Ainsi on aura accès à ces données au moment de définir le headerRight
+    _updateNavigationParams() {
+        this.props.navigation.setParams({
+            shareFilm: this._shareFilm,
+            film: this.state.film
+        })
     }
 
     componentDidMount() {
@@ -21,6 +59,8 @@ class FilmDetail extends React.Component {
             this.setState({
                 film: this.props.favoritesFilm[favoriteFilmIndex],
                 isLoading: false
+            }, () => {
+                this._updateNavigationParams()
             })
             return
         }
@@ -31,6 +71,8 @@ class FilmDetail extends React.Component {
             this.setState({
                 film: data,
                 isLoading: false
+            }, () => {
+                this._updateNavigationParams()
             })
         })
     }
@@ -116,10 +158,10 @@ class FilmDetail extends React.Component {
             return (
                 <TouchableOpacity
                     style={styles.share_touchable_floatingactionbutton}
-                onPress={() => this._shareFilm()} >
+                    onPress={() => this._shareFilm()}>
                     <Image
                         style={styles.share_image}
-                        source={require('../Images/ic_share.png')} />
+                        source={require('../Images/ic_share.png')}/>
                 </TouchableOpacity>
             )
         }
