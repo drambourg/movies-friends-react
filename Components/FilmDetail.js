@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleSheet, View, Text, ActivityIndicator, ScrollView, Image, TouchableOpacity, Button} from "react-native";
+import {StyleSheet, View, Text, ActivityIndicator, ScrollView, Image, TouchableOpacity, Share, Platform} from "react-native";
 import {getFilmDetailFromApi, getImageFromAPI} from '../API/TMDBApi'
 import moment from 'moment'
 import numeral from 'numeral'
@@ -46,7 +46,7 @@ class FilmDetail extends React.Component {
     }
 
     _toggleFavorite() {
-        const action = { type: "TOGGLE_FAVORITE", value: this.state.film }
+        const action = {type: "TOGGLE_FAVORITE", value: this.state.film}
         this.props.dispatch(action)
     }
 
@@ -77,8 +77,8 @@ class FilmDetail extends React.Component {
                         <View style={styles.header_container}>
                             <Text style={styles.movie_title}>{film.title}</Text>
                             <TouchableOpacity
-                            style={styles.favorite_container}
-                            onPress={() => this._toggleFavorite()}>
+                                style={styles.favorite_container}
+                                onPress={() => this._toggleFavorite()}>
                                 {this._displayFavoriteImage()}
                             </TouchableOpacity>
                         </View>
@@ -110,11 +110,33 @@ class FilmDetail extends React.Component {
     }
 
 
+    _displayFloatingActionButton() {
+        const {film} = this.state
+        if (film != undefined && Platform.OS === 'android') {
+            return (
+                <TouchableOpacity
+                    style={styles.share_touchable_floatingactionbutton}
+                onPress={() => this._shareFilm()} >
+                    <Image
+                        style={styles.share_image}
+                        source={require('../Images/ic_share.png')} />
+                </TouchableOpacity>
+            )
+        }
+    }
+
+    _shareFilm() {
+        const {film} = this.state
+        Share.share({title: film.title, message: film.overview})
+    }
+
+
     render() {
         return (
             <View style={styles.main_container}>
                 {this._displayLoading()}
                 {this._displayFilm()}
+                {this._displayFloatingActionButton()}
             </View>
         )
     }
@@ -174,12 +196,27 @@ const styles = StyleSheet.create({
         width: 40,
         height: 40
     },
+    share_touchable_floatingactionbutton: {
+        position: 'absolute',
+        width: 60,
+        height: 60,
+        right: 30,
+        bottom: 30,
+        borderRadius: 30,
+        backgroundColor: '#e91e63',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    share_image: {
+        width: 30,
+        height: 30
+    },
 })
 
 
 const mapStateToProps = (state) => {
     return {
-        favoritesFilm : state.favoritesFilm
+        favoritesFilm: state.favoritesFilm
     }
 }
 
