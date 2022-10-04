@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@types/react": "^16.8.23",
-    "expo": "^32.0.0",
+    "expo": "^46.0.14",
     "moment": "^2.24.0",
     "numeral": "^2.0.6",
     "react": "16.5.0",
